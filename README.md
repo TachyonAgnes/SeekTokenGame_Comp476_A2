@@ -22,7 +22,7 @@ The game is won if the Evader survives until the end of the game and wins.
 
 ## Installation and Running
 1. Clone the repository to your local machine.
-2. Open the Unity engine and import the repository.
+2. Open the Unity engine(2021.3.17f1) and import the repository.
 3. Run the game scene and start playing.
 
 ## Contributors
