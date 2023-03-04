@@ -1,12 +1,24 @@
 # Comp476_A1
 # Game Freeze Tag
-Game Freeze Tag is a simple multiplayer game controlled with the WASD keys, developed using the Unity engine. The game features two teams: Chaser and Evader. Players begin as members of the Evader team, and the game lasts for five minutes. If an Evader is touched by a Chaser, they become frozen. If the frozen Evader is not rescued by another player within 15 seconds, they become a Chaser. Tokens spawn periodically on the map, and only players and Chasers can touch them.
+Game Freeze Tag is a simple multiplayer game controlled with the WASD keys, developed using the Unity engine. The game features two teams: Chaser and Evader. Players begin as members of the Evader team, and the game lasts for five minutes. If an Evader is touched by a Chaser, they become frozen. If the frozen Evader is not rescued by another player within 15 seconds, they become a Chaser. Tokens spawn periodically on the map, and only players and Chasers can touch them
+
+<p align="center">
+  <img alt="gameScenes" src="https://github.com/TachyonAgnes/Comp476_A1/blob/master/screenShots/gameScenes.png?raw=true" width="61.1%">
+&nbsp; &nbsp; 
+  <img alt="mapIllustration" src="https://github.com/TachyonAgnes/Comp476_A1/blob/master/screenShots/mapIllustration.png?raw=true" width="34.7%">
+</p>
+
+> ***blue dots are the room nodes for evader to trace***
 
 The game fails if any of the following conditions are met:
 
 - An Evader becomes a Chaser.
 - The Evader obtains less than half of the total tokens when the game ends.
 The game is won if the Evader survives until the end of the game and wins.
+<p align="center">
+  <img alt="ScoreBoard" src="https://github.com/TachyonAgnes/Comp476_A1/blob/master/screenShots/ScoreBoard.png?raw=true" width="60%">
+</p>
+
 
 ## Controls
 - WASD: Move the player up, down, left, and right.
@@ -42,3 +54,6 @@ My Obstacle Avoidance is the code I've rewritten the most times. I've tried sing
 Due to the heavy workload, I used the A* algorithm in the instructor's lab code. I must apologize for this. However, I've implemented the A* algorithm very well in Comp472, and if there are any doubts about my ability, I can show my AI assignments. Based on the lab code, I used the Chebyshev Distance Heuristic and defined the cost of diagonal movement as 1.4, considering diagonal movements. The switch between my A* algorithm and other displacement methods is basically determined by whether there are obstacles between the agent and the target and the distance between the two. When escaping, I calculate the angle between the agent-to-enemy vector and the agent-to-nearest-safe-point vector to determine the safest escape route.
 
 In addition, my movement behavior is basically the same as the lab, but I rewrote it to ensure that I truly learned it. The submission time for the assignment was during the busiest time of this semester, and the size of the game and my available work time didn't quite match up, so the code was always undergoing intense changes, especially the obstacle avoidance. Therefore, I couldn't add comments to all of the code, but I did my best to do so.
+
+>![mainMenu](https://github.com/TachyonAgnes/Comp476_A1/blob/master/screenShots/mainMenu.png?raw=true)
+>![pause](https://github.com/TachyonAgnes/Comp476_A1/blob/master/screenShots/pause.png?raw=true)
