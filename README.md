@@ -2,6 +2,7 @@
 # Game SeekTokenGame
 
 This game is based on the implementation of Comp476_A1, which was refactored using behavior trees to improve the code structure, and implemented a series of advanced AI behaviors, tactical decision-making, influence maps, and tactical locations.
+
 [Click Here To Check Screen Shots](screenShots/PDF.pdf)
 
 # Winning conditions
