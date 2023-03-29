@@ -1,5 +1,5 @@
 # Comp476_A2
-# Game Freeze Tag 2.0 
+# Game SeekTokenGame
 
 This game is based on the implementation of Comp476_A1, which was refactored using behavior trees to improve the code structure, and implemented a series of advanced AI behaviors, tactical decision-making, influence maps, and tactical locations.
 
