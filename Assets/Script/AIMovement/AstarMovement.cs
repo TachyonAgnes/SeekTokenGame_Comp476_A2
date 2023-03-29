@@ -48,10 +48,13 @@ public class AstarMovement : AIMovement
             Debug.LogError("GridGraph is null!");
             return output;
         }
-        startNode = agent.gridGraph.FindObjectAdjacentNode(gameObject);
-        goalNode = agent.gridGraph.FindObjectAdjacentNode(agent.aStarTarget);
+        if(agent.aStarTarget == null) {
+            return output;
+        }
+        startNode = agent.gridGraph.FindObjectAdjacentNode(gameObject.transform.position);
+        goalNode = agent.gridGraph.FindObjectAdjacentNode(agent.aStarTarget.transform.position);
         if (path.Count == 0) {
-            path = agent.pathFinding.FindPath(startNode, goalNode, agent.debug, agent.pathFinding.ChebyshevDistanceHeuristic);
+            path = agent.pathFinding.FindPath(startNode, goalNode, agent.debug, agent.isChaser, agent.pathFinding.ChebyshevDistanceHeuristic);
         }
 
         output.linear = FollowPath(agent);

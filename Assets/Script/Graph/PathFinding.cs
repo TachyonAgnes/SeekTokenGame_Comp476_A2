@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+//using UnityEditor.Experimental.GraphView;
 //using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 
@@ -33,7 +35,8 @@ public class PathFinding : MonoBehaviour
         return 1f;
     }
 
-    public List<GridGraphNode> FindPath(GridGraphNode start, GridGraphNode goal, bool isDebug, Heuristic heuristic = null, bool isAdmissible = true ) {
+
+    public List<GridGraphNode> FindPath(GridGraphNode start, GridGraphNode goal, bool isDebug, bool isChaser, Heuristic heuristic = null, bool isAdmissible = true) {
         if(graph == null) { return new List<GridGraphNode>(); }
         //if no heuristic, heuristic = 0;
         if (heuristic == null) { heuristic = (Transform s, Transform e) => 0; }
@@ -89,7 +92,17 @@ public class PathFinding : MonoBehaviour
 
                 if (!gnDict.ContainsKey(next) || gNeighbor < gnDict[next]) {
                     gnDict[next] = gNeighbor;
-                    fnDict[next] = gNeighbor + heuristic(next.transform, goal.transform);
+                    if (isChaser) {
+                        fnDict[next] = (gNeighbor + heuristic(next.transform, goal.transform)) * (1 + InfluenceMap.influenceInTotalMap[next]);
+                        
+                    }
+                    else {
+                        // if is seeker, we add the chaser influence map
+                        fnDict[next] = (gNeighbor + heuristic(goal.transform, next.transform)) * (1 + InfluenceMap.chaserInfluenceMap[next]);
+                        //fnDict[next] = (gNeighbor + heuristic(next.transform, goal.transform))* (1+ InfluenceMap.chaserInfluenceMap[next]);
+                       // print("GameObject"+ next.gameObject+ " before:" + (gNeighbor + heuristic(next.transform, goal.transform)) + "after:" + fnDict[next]);
+                    }
+                    
                     FakePQListInsert(openList,fnDict, next);
                     pathDict[next] = current;
                 }

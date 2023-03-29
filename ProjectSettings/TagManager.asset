@@ -8,9 +8,14 @@ TagManager:
   - Obstacle
   - Token
   - Chaser
-  - RoomAxis
   - Evader
   - Frozen
+  - SaveArea
+  - KnockedOut
+  - TacticalLocation
+  - Ground
+  - Door
+  - room
   layers:
   - Default
   - TransparentFX
@@ -24,16 +29,16 @@ TagManager:
   - Token
   - Chaser
   - Evader
-  - RoomAxis
+  - 
   - Frozen
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Head
+  - KnockedOut
+  - Bomb
+  - Blizzard
+  - TacticalLocation
+  - LineOfSight
+  - Door
+  - room
   - 
   - 
   - 

@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
     public void StartGame() {
-        SceneManager.LoadScene("Assignment  A1");
+        Time.timeScale = 1;
+        SceneManager.LoadScene(1);
     }
 
     public void QuitGame() {

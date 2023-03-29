@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,6 +7,7 @@ using UnityEngine;
 public class GridGraph : MonoBehaviour {
     [SerializeField, HideInInspector] public List<GridGraphNode> nodes = new List<GridGraphNode>();
     [SerializeField] public GameObject nodePrefab;
+    [SerializeField] public List<List<GridGraphNode>> nodeGrid = new List<List<GridGraphNode>>();
     public int Count => nodes.Count;
 
 #region grid_generation_properties
@@ -43,9 +45,15 @@ public class GridGraph : MonoBehaviour {
 #endif
     #endregion
 
-    //private void Start() {
-    //    GenerateGrid();
-    //}
+    private void Awake() {
+        for (int r = 0; r < genGridRows; r++) {
+            nodeGrid.Add(new List<GridGraphNode>());
+            for (int c = 0; c < genGridCols; c++) {
+                nodeGrid[r].Add(null);
+            }
+        }
+        GenerateGrid();
+    }
 
     //Remove nodes ref and destroy child instance;
     public void Clear() {
@@ -63,14 +71,14 @@ public class GridGraph : MonoBehaviour {
         }
         nodes.Remove(node);
     }
-    public GridGraphNode FindObjectAdjacentNode(GameObject obj) {
+    public GridGraphNode FindObjectAdjacentNode(Vector3 pos) {
         GridGraphNode closestNode = null;
 
         float closestDistance = Mathf.Infinity;
 
         foreach (GridGraphNode node in nodes) {
 
-            float currentDistance = Vector3.Distance(obj.transform.position, node.transform.position);
+            float currentDistance = Vector3.Distance(pos, node.transform.position);
 
             if (currentDistance < closestDistance) {
 
@@ -85,9 +93,6 @@ public class GridGraph : MonoBehaviour {
 
     public void GenerateGrid(bool checkCollisions = true) {
         Clear();
-
-        // declear a two-dimentional array;
-        GridGraphNode[,] nodeGrid = new GridGraphNode[genGridRows, genGridCols];
 
         // if genGridCols or genGridRows <= 0, their corresponding width or height value will be zero, other wise, £¨genGrid* - 1)  * genGridCellSize
         // ex. say if we have 10 cols, then there are 9 space between them
@@ -124,7 +129,7 @@ public class GridGraph : MonoBehaviour {
 
                 GridGraphNode addedNode = obj.GetComponent<GridGraphNode>();
                 nodes.Add(addedNode);
-                nodeGrid[r, c] = addedNode;
+                nodeGrid[r][c] = addedNode;
 
                 //next col
                 genPosition = new Vector3(genPosition.x + genGridCellSize, genPosition.y, genPosition.z);
@@ -141,7 +146,7 @@ public class GridGraph : MonoBehaviour {
         for (int r = 0; r < genGridRows; ++r) {
             for (int c = 0; c < genGridCols; ++c) {
                 //the nodeGrid is two dimention array that is storing generated node instance;
-                if (nodeGrid[r, c] == null) continue;
+                if (nodeGrid[r][c] == null) continue;
 
                 //each loop, check 8 neighbor around that node, and see if operation bring us out of bounds, if so, check next one
                 //GetLength(0), find 1st dimension length.
@@ -149,22 +154,22 @@ public class GridGraph : MonoBehaviour {
                     int[] neighborId = new int[2] { r + operations[i, 0], c + operations[i, 1] };
 
                     // check to see if operation brings us out of bounds,if so continues
-                    if (neighborId[0] < 0 || neighborId[0] >= nodeGrid.GetLength(0) || neighborId[1] < 0 || neighborId[1] >= nodeGrid.GetLength(1)) {
+                    if (neighborId[0] < 0 || neighborId[0] >= nodeGrid.Count || neighborId[1] < 0 || neighborId[1] >= nodeGrid[0].Count) {
                         continue;
                     }
 
                     // a neighbor position that is valid, and it has a created instance
-                    GridGraphNode neighbor = nodeGrid[neighborId[0], neighborId[1]];
+                    GridGraphNode neighbor = nodeGrid[neighborId[0]][neighborId[1]];
 
                     // use raycast to check collisions, if so continues, else store it.
                     if (neighbor != null) {
                         if(checkCollisions) {
-                            Vector3 direction = neighbor.transform.position - nodeGrid[r, c].transform.position;
-                            if(Physics.Raycast(nodeGrid[r,c].transform.position, direction, direction.magnitude, LayerMask.GetMask("Obstacle"))) {
+                            Vector3 direction = neighbor.transform.position - nodeGrid[r][c].transform.position;
+                            if(Physics.Raycast(nodeGrid[r][c].transform.position, direction, direction.magnitude, LayerMask.GetMask("Obstacle"))) {
                                 continue;
                             }
                         }
-                        nodeGrid[r,c].adjacencyList.Add(neighbor);
+                        nodeGrid[r][c].adjacencyList.Add(neighbor);
                     }
                 }
             }

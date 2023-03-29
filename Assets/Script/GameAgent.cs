@@ -16,32 +16,66 @@ public class GameAgent : MonoBehaviour
 {
     public GameState currentState;
 
+    [Header("Camera")]
+    [SerializeField] GameObject fullViewCam;
+    [SerializeField] GameObject followCam;
+    [SerializeField] GameObject fullViewNotif;
+    [SerializeField] GameObject followNotif;
+    [SerializeField] GameObject miniMapDisplay;
+
     //game score
-    public int chaserScore = 0;
-    public int evaderScore = 0;
-    public int tokenCount = 0;
+    public int playerScore = 0;
+    public int seekerScore = 0;
     ScoreBoard scoreBoard;
 
     public float gameTimeLimitInMins = 60 * 5f; // 5 minutes
     private float startTime;
     public bool isGameOver;
-    public bool isSomeOneFrozen = false;
+
+    // use gameAgent as a singleton
+    public Dictionary<AIAgent,Vector3> lastPosCollector = new Dictionary<AIAgent,Vector3>();
 
     public GameObject gameOverPanel;
     public GameObject player;
+    public TokenSpawner tokenSpawner;
+    GameManager manager;
 
+    bool shiftPressed = false;
+     
     private void Start() {
         currentState = GameState.Playing;
         startTime = Time.time;
         StartCoroutine(GameTimeLimitCoroutine());
         scoreBoard = FindObjectOfType<ScoreBoard>();
-        player = GameObject.Find("player");
+        player = GameObject.Find("player(Clone)");
+        tokenSpawner = FindObjectOfType<TokenSpawner>();
+        manager = GetComponent<GameManager>();
     }
 
     private void Update() {
+        // switch camera
+        if (Input.GetKeyDown(KeyCode.LeftShift)) {
+            shiftPressed = !shiftPressed; 
+        }
+
+        if (shiftPressed) {
+                followCam.SetActive(true);
+                followNotif.SetActive(true);
+                fullViewCam.SetActive(false);
+                fullViewNotif.SetActive(false);
+                miniMapDisplay.SetActive(true);
+        }
+        else {
+            followCam.SetActive(false);
+            followNotif.SetActive(false);
+            fullViewCam.SetActive(true);
+            fullViewNotif.SetActive(true);
+            miniMapDisplay.SetActive(false);
+        }
+
         switch (currentState) {
             case GameState.Playing:
-                if (player.CompareTag("Chaser")) {
+                if (player.CompareTag("KnockedOut") || (seekerScore + playerScore) >= tokenSpawner.tokenTotal) {
                     isGameOver = true;
                 }
                 if (isGameOver) {
@@ -63,14 +97,15 @@ public class GameAgent : MonoBehaviour
     }
 
     private void HandleGameOver() {
-        if (player.CompareTag("Chaser")) {
+        if (player.CompareTag("KnockedOut")) {
             scoreBoard.titleUI.text = "YOU DIED";
-            scoreBoard.report.text = "The player cannot come out of his unfrozen state and his life stops forever.";
+            scoreBoard.report.text = "The player knockedOut";
         }
-        else if ((evaderScore!=0 ?evaderScore:0) < ((tokenCount != 0) ? tokenCount / 2: 0) ) {
-            scoreBoard.titleUI.text = "GAME FAILURE";
-            scoreBoard.report.text = "The player did not get enough tickets to support his departure";
+        else if((seekerScore + playerScore) < tokenSpawner.tokenTotal) {
+            scoreBoard.titleUI.text = "FAILURE";
+            scoreBoard.report.text = "You didn't collect enough token in time";
         }
+
         else {
             scoreBoard.titleUI.text = "GAME COMPLETED";
             scoreBoard.report.text = "You win, the chaser is amazed by your skills.";
@@ -80,26 +115,25 @@ public class GameAgent : MonoBehaviour
         gameOverPanel.SetActive(true);
     }
 
-    public void AddScore(string colEntTag, int tokenTotal) {
-        if (colEntTag == "Chaser") {
-            chaserScore++;
-            scoreBoard.UpdateScore(colEntTag, chaserScore,tokenTotal);
+    public void AddScore(string colEntTag) {
+        if (colEntTag == "player(Clone)") {
+            playerScore++;
         }
         else if(colEntTag == "Evader") {
-            evaderScore++;
-            scoreBoard.UpdateScore(colEntTag, evaderScore, tokenTotal);
+            seekerScore++;
         }
     }
 
     public void RestartGame() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         currentState = GameState.Playing;
-        Time.timeScale = 1f;
+        manager.Resume();
     }
 
     public void QuitGame() {
-        SceneManager.LoadScene("Menu");
-        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        currentState = GameState.Playing;
+        manager.Resume();
     }
 
     

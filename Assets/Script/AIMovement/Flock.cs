@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Flock : AIMovement
 {    
-    public float neighborRadius = 5f;
-    public float separationRadius = 3.5f;
+    private float neighborRadius = 10f;
+    private float separationRadius = 10f;            
     private float maxSpeed;
     private Vector3 velocity;
     private float maxForce;
@@ -14,7 +14,7 @@ public class Flock : AIMovement
 
 
     private Vector3 ToFlock(AIAgent agent) {
-        Collider[] colliders = GetNeighborContext();
+        Collider[] colliders = GetNeighborContext(agent);
         List<AIAgent> neighbors = new List<AIAgent>();
         foreach (Collider col in colliders) {
             AIAgent neighbor = col.GetComponent<AIAgent>();
@@ -72,8 +72,8 @@ public class Flock : AIMovement
         return steering;
     }
 
-    public Collider[] GetNeighborContext() {
-        Collider[] neighbors = Physics.OverlapSphere(transform.position, neighborRadius, LayerMask.GetMask("Evader"));
+    public Collider[] GetNeighborContext(AIAgent agent) {
+        Collider[] neighbors = Physics.OverlapSphere(transform.position, neighborRadius, LayerMask.GetMask(agent.CompareTag("Chaser")?"Chaser":"Evader"));
         return neighbors;
     }
 
@@ -92,8 +92,8 @@ public class Flock : AIMovement
     public override SteeringOutput GetSteering(AIAgent agent) {
         var output = base.GetSteering(agent);
 
-        output.linear = GetKinematic(agent).linear - output.linear;
-
+        output.linear = (GetKinematic(agent).linear - output.linear)*2f;
+        print(output.linear);
         return output;
     }
 }

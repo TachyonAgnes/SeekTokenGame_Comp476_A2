@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 152650678}
   - component: {fileID: 152650677}
   - component: {fileID: 152650676}
-  - component: {fileID: 152650675}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -143,29 +142,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &152650675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 152650674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6521420d553c3fa41a7d5dffca0fd07f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chaserScoreText: {fileID: 0}
-  evaderScoreText: {fileID: 0}
-  chaserScoreText1: {fileID: 0}
-  evaderScoreText1: {fileID: 0}
-  tokenTotalText: {fileID: 0}
-  tokenTotalText1: {fileID: 0}
-  report: {fileID: 0}
-  titleUI: {fileID: 0}
-  gameOverText: 
-  title: 
-  tokenTotal: 0
 --- !u!114 &152650676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -867,7 +843,7 @@ RectTransform:
   m_GameObject: {fileID: 1743038946}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.9, z: 1}
+  m_LocalScale: {x: 1, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1777407639}
@@ -898,7 +874,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: db294d8cd96d9914d91eda80bb7826bd, type: 3}
+  m_Texture: {fileID: 2800000, guid: 539014848fa1a5b498be5fef83feaf49, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1024,7 +1000,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "This game was made for Comp476 Assignment_1,\nThis image was generated
+  m_text: "This game was made for Comp476 Assignment_2,\nThis image was generated
     by Stable Diffusion. \nZisen Ling, student ID: 40020293"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

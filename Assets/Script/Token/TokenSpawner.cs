@@ -15,13 +15,14 @@ public class TokenSpawner : MonoBehaviour {
     private int nodeCount;
     private int randomNodeIndex;
 
-    public int tokenTotal = 0;
+    public int tokenNum = 0;
+    public int tokenTotal = 10;
 
     public float spawnInterval = 5.0f;
     public GameObject tokenSpawned;
 
     // define a TokenSpawned type delegate, is to notify if there is a token generated
-    public delegate void TokenSpawned(bool spawned, GameObject tokenSpawned, GameObject closestChaser);
+    public delegate void TokenSpawned(bool spawned, GameObject tokenSpawned);
     public static event TokenSpawned OnTokenSpawned;
 
     void Start() {
@@ -36,32 +37,17 @@ public class TokenSpawner : MonoBehaviour {
 
     public void SpawnToken() {
         if (!canSpawn) { return; }
-        randomNodeIndex = UnityEngine.Random.Range(0, nodeCount);
-        GameObject newToken = Instantiate(tokenPrefab, nodes[randomNodeIndex].transform.position, Quaternion.identity);
-        newToken.GetComponent<Token>().spawner = this;
-        tokenSpawned = newToken;
-        canSpawn = false;
-        tokenTotal++;
+        if(tokenNum < tokenTotal) {
+            randomNodeIndex = UnityEngine.Random.Range(0, nodeCount);
+            GameObject newToken = Instantiate(tokenPrefab, nodes[randomNodeIndex].transform.position, Quaternion.identity);
+            newToken.GetComponent<Token>().spawner = this;
+            tokenSpawned = newToken;
+            canSpawn = false;
+            tokenNum++;
 
-        //token generated, notify chaser;
-        OnTokenSpawned?.Invoke(true, newToken, FindNearlestChaser(newToken));
-    }
-
-    public GameObject FindNearlestChaser(GameObject token) {
-        GameObject[] chasers = GameObject.FindGameObjectsWithTag("Chaser");
-        if (chasers != null && chasers.Length > 1) {
-            float closestDistance = Mathf.Infinity;
-            GameObject closestChaser = null;
-            foreach (GameObject chaser in chasers) {
-                float distance = Vector3.Distance(token.transform.position, chaser.transform.position);
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestChaser = chaser;
-                }
-            }
-            return closestChaser;
+            //token generated, notify chaser;
+            OnTokenSpawned?.Invoke(true, newToken);
         }
-        return null;
     }
 
     private IEnumerator DelaySpawnTimer() {

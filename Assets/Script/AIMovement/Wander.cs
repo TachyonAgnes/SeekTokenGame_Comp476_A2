@@ -14,7 +14,7 @@ public class Wander : AIMovement {
         timeSinceLastWander += Time.fixedDeltaTime;
         if (timeSinceLastWander >= wanderTargetUpdateTime) {
             float wanderAngle = (UnityEngine.Random.value - UnityEngine.Random.value) * deltaDegree;
-            Vector3 circlePos = transform.position + transform.forward * wanderDistance;
+            Vector3 circlePos = agent.transform.position + agent.transform.forward * wanderDistance;
             wanderTarget = circlePos + Quaternion.AngleAxis(wanderAngle, transform.up) * (transform.forward * wanderRadius);
             timeSinceLastWander = 0f;
         }
@@ -26,7 +26,6 @@ public class Wander : AIMovement {
         var output = base.GetKinematic(agent);
 
         output.linear = ToWander(agent);
-        if (debug) Debug.DrawRay(transform.position, output.linear, Color.cyan);
         return output;
     }
     public override SteeringOutput GetSteering(AIAgent agent) {
@@ -34,7 +33,7 @@ public class Wander : AIMovement {
 
         Vector3 steering = GetKinematic(agent).linear - output.linear;
         output.linear = steering;
-        if (debug) Debug.DrawRay(transform.position + agent.velocity, output.linear, Color.green);
+        if (debug) Debug.DrawRay(agent.transform.position + agent.velocity, output.linear, Color.green);
         return output;
     }
 }

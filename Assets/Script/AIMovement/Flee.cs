@@ -11,39 +11,48 @@ public class Flee : AIMovement {
         if (chasers.Count > 0) {
             Vector3 desired = Vector3.zero;
             foreach (GameObject chaser in chasers) {
-                Vector3 direction = transform.position - agent.target.transform.position;
-                desired = direction.normalized * agent.maxSpeed;
+                if (!CheckObstacleBetween(chaser.gameObject)) {
+                    Vector3 direction = agent.transform.position - chaser.transform.position;
+                    desired += direction.normalized;
+                }
             }
+            desired.Normalize();
             desired.y = 0;
-            return desired;
+            return desired * agent.maxSpeed;
         }
         return Vector3.zero;
     }
 
     public List<GameObject> FindChasers() {
-        float fleeDistance = myAgent.nearRadius;
-        Collider[] colliders = Physics.OverlapSphere(transform.position, fleeDistance, LayerMask.GetMask("Chaser"));
+        float fleeDistance = myAgent.farRadius;
+        LayerMask mask = LayerMask.GetMask("Chaser", "Frozen");
+        Collider[] colliders = Physics.OverlapSphere(myAgent.transform.position, fleeDistance, mask);
         List<GameObject> chasers = new List<GameObject>();
-        foreach (Collider collider in colliders) {
-            chasers.Add(collider.gameObject);
+        foreach (Collider col in colliders) {
+            chasers.Add(col.gameObject);
         }
         return chasers;
     }
 
+    // Check if there is an obstacle between the agent and the target
+    private bool CheckObstacleBetween(GameObject target) {
+        Vector3 start = myAgent.transform.position;
+        Vector3 end = target.transform.position - start;
+        float maxDistance = end.magnitude + 2f;
+        bool result = Physics.Raycast(start, end, out RaycastHit hit, maxDistance) && hit.collider.gameObject != target;
+        return result;
+    }
+
     public override SteeringOutput GetKinematic(AIAgent agent) {
         var output = base.GetKinematic(agent);
-        myAgent = agent;
-
         output.linear = ToFlee(agent);
-
         return output;
     }
 
     public override SteeringOutput GetSteering(AIAgent agent) {
         var output = base.GetSteering(agent);
-
+        myAgent = agent;
         output.linear = GetKinematic(agent).linear - output.linear;
-
         return output;
     }
 

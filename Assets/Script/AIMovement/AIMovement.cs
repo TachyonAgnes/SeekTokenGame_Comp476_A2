@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class AIMovement : MonoBehaviour {
@@ -15,4 +16,5 @@ public abstract class AIMovement : MonoBehaviour {
     public virtual SteeringOutput GetSteering(AIAgent agent) {
         return new SteeringOutput { angular = Quaternion.identity };
     }
+
 }
